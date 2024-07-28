@@ -1,5 +1,4 @@
 import React from 'react'
-import SearchIcon from "../../../icons/search.svg";
 import { InputSearchProps } from './types';
 import { useSearchProduct } from '../../../../hooks/useSearchProduct';
 
