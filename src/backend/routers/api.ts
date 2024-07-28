@@ -35,23 +35,39 @@ router.get<{}, DetailedItem>("/details/*", async (req, res) => {
   /**
    * Mock of https://api.mercadolibre.com/items/MLA1424136641
    */
-  const item: ItemApiResponse = JSON.parse(
-    fs.readFileSync(path.resolve("src/mocks/item.json")).toString()
-  );
+  // const item: ItemApiResponse = JSON.parse(
+  //   fs.readFileSync(path.resolve("src/mocks/item.json")).toString()
+  // );
+
+  const params: {[key: string]: string;} = req.params;
+
+  try {
+    const response = await fetch(`https://api.mercadolibre.com/sites/MLA/search?q=celular`);
+    const description = await fetch(`https://api.mercadolibre.com/items/${params['0']}/description`)
+    const { results } = await response.json();
+    const { plain_text } = await description.json();
+    const data = results.find((item: any) => item.id === params['0']);
+    res.json({
+      ...data,
+      plain_text
+    });
+  } catch (error) {
+    
+  }
 
   /**
    * Mock of https://api.mercadolibre.com/items/MLA1424136641/description
    */
-  const description: ItemDescriptionApiResponse = JSON.parse(
-    fs.readFileSync(path.resolve("src/mocks/description.json")).toString()
-  );
+  // const description: ItemDescriptionApiResponse = JSON.parse(
+  //   fs.readFileSync(path.resolve("src/mocks/description.json")).toString()
+  // );
 
-  res.json({
-    id: item.id,
-    title: item.title,
-    picture: item.pictures[0].url,
-    description: description.plain_text,
-  });
+  // res.json({
+  //   id: item.id,
+  //   title: item.title,
+  //   picture: item.pictures[0].url,
+  //   description: description.plain_text,
+  // });
 });
 
 export default router;
