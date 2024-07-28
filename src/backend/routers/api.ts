@@ -14,11 +14,21 @@ router.get<{}, SearchApiResponse>("/search", async (req, res) => {
   /**
    * Mock of https://api.mercadolibre.com/sites/MLA/search?q=celular&limit=10&offset=0
    */
-  const search: SearchApiResponse = JSON.parse(
-    fs.readFileSync(path.resolve("src/mocks/search.json")).toString()
-  );
+  // const search: SearchApiResponse = JSON.parse(
+  //   fs.readFileSync(path.resolve("src/mocks/search.json")).toString()
+  // );
 
-  res.send(search);
+  const { limit = 20, offset = 0 } = req.query;
+
+  try {
+    const response = await fetch(`https://api.mercadolibre.com/sites/MLA/search?q=celular&limit=${limit}&offset=${offset}`);
+    const data = await response.json();
+    res.send(data);
+  } catch (error) {
+    
+  }
+
+  // res.send(search);
 });
 
 router.get<{}, DetailedItem>("/details/*", async (req, res) => {
